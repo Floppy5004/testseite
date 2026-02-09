@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import { useCart } from "./CartProvider";
-import { supabase } from "@/lib/supabase";
+import { getSupabase } from "@/lib/supabase";
 
 export default function Cart() {
   const { items, removeItem, updateQuantity, clearCart, totalItems, subtotal, shippingCost, total, isOpen, setIsOpen } = useCart();
@@ -18,7 +18,7 @@ export default function Cart() {
     const fd = new FormData(form);
 
     // Create customer
-    const { data: customer, error: custErr } = await supabase.from("customers").insert({
+    const { data: customer, error: custErr } = await getSupabase().from("customers").insert({
       email: fd.get("email") as string,
       first_name: fd.get("first_name") as string,
       last_name: fd.get("last_name") as string,
@@ -35,7 +35,7 @@ export default function Cart() {
     }
 
     // Create order
-    const { data: order, error: orderErr } = await supabase.from("orders").insert({
+    const { data: order, error: orderErr } = await getSupabase().from("orders").insert({
       customer_id: customer.id,
       total,
       shipping_cost: shippingCost,
@@ -56,7 +56,7 @@ export default function Cart() {
       unit_price: item.price,
     }));
 
-    await supabase.from("order_items").insert(orderItems);
+    await getSupabase().from("order_items").insert(orderItems);
 
     clearCart();
     setCheckoutStep("done");

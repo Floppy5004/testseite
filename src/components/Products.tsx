@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import { supabase } from "@/lib/supabase";
+import { getSupabase } from "@/lib/supabase";
 import { useCart } from "./CartProvider";
 import type { Tables } from "@/lib/database.types";
 
@@ -12,7 +12,7 @@ export default function Products() {
   const { addItem } = useCart();
 
   useEffect(() => {
-    supabase.from("products").select("*").order("sort_order").then(({ data }) => {
+    getSupabase().from("products").select("*").order("sort_order").then(({ data }) => {
       if (data) setProducts(data);
     });
   }, []);

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-import { supabase } from "@/lib/supabase";
+import { getSupabase } from "@/lib/supabase";
 
 export default function Contact() {
   const [sending, setSending] = useState(false);
@@ -18,7 +18,7 @@ export default function Contact() {
     const subject = data.get("subject") as string;
     const message = data.get("message") as string;
 
-    const { error } = await supabase.from("contact_messages").insert({ name, email, subject, message });
+    const { error } = await getSupabase().from("contact_messages").insert({ name, email, subject, message });
 
     if (error) {
       setToast({ title: "Fehler", msg: "Nachricht konnte nicht gesendet werden. Bitte versuche es erneut." });
